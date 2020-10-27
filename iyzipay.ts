@@ -1,12 +1,16 @@
 import Iyzipay from "iyzipay";
-import { IyziPay3D } from "./interfaces/iyzipay_3d_req";
-import { IyziPayForm } from "./interfaces/iyzipay_form_req";
-import { Pay3DParams } from "./interfaces/iyzico/function_param_interfaces/3d_iyzipay_params";
+import { Iyzipay3D } from "./interfaces/iyzipay_3d_req";
+import { IyzipayForm } from "./interfaces/iyzipay_form_req";
+import { Pay3DParams } from "./interfaces/function_param_interfaces/3d_iyzipay_params";
 import { SubMerchant } from "./interfaces/submerchant";
-import { PayFormParams } from "./interfaces/iyzico/function_param_interfaces/form_iyzipay_params";
-import { APIKey } from "./interfaces/iyzico/api_key";
-import { UpdateSubmerchantParams } from "./interfaces/iyzico/function_param_interfaces/update_submerchant_params";
+import { PayFormParams } from "./interfaces/function_param_interfaces/form_iyzipay_params";
+import { APIKey } from "./interfaces/api_key";
+import { UpdateSubmerchantParams } from "./interfaces/function_param_interfaces/update_submerchant_params";
 
+/** 
+ * Make a purchase with a Checkout Form.
+ * For more information: https://dev.iyzipay.com/en/checkout-form
+ */
 export const iyzipayPaymentForm = async ({
   basketItems,
   billingAddress,
@@ -21,7 +25,7 @@ export const iyzipayPaymentForm = async ({
 }: PayFormParams) => {
   let iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
 
-  let asyncIyziPayForm = function (req: IyziPayForm) {
+  let asyncIyzipayForm = function (req: IyzipayForm) {
     return new Promise((resolve, reject) => {
       iyzipay.checkoutFormInitialize.create(req, function (err, result) {
         if (err) reject(err);
@@ -30,11 +34,11 @@ export const iyzipayPaymentForm = async ({
     });
   };
 
-  let request: IyziPayForm = {
+  let request: IyzipayForm = {
     locale: Iyzipay.LOCALE.TR,
     conversationId: conversationId,
-    price: price.toString(),
-    paidPrice: pricePaid.toString(),
+    price: price,
+    paidPrice: pricePaid,
     currency: Iyzipay.CURRENCY.TRY,
     enabledInstallments: enabledInstallments,
     paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
@@ -44,14 +48,19 @@ export const iyzipayPaymentForm = async ({
     billingAddress: billingAddress,
     basketItems: basketItems,
   };
-  let res = await asyncIyziPayForm(request);
+  let res = await asyncIyzipayForm(request);
   return res;
 };
 
-export const iyzipayRetrieveForm = async (token: string, iyzicoAPIKeyInfo: APIKey) => {
+
+/** 
+ * Retrieve a purchase from a Checkout Form.
+ * For more information: https://dev.iyzipay.com/en/checkout-form/retrieve
+ */
+export const retrieveIyzipayForm = async (token: string, iyzicoAPIKeyInfo: APIKey) => {
   let iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
 
-  let asyncIyziPayForm = function (req) {
+  let asyncIyzipayForm = function (req) {
     return new Promise((resolve, reject) => {
       iyzipay.checkoutForm.retrieve(req, function (err, result) {
         if (err) reject(err);
@@ -64,12 +73,15 @@ export const iyzipayRetrieveForm = async (token: string, iyzicoAPIKeyInfo: APIKe
     locale: Iyzipay.LOCALE.TR,
     token: token,
   };
-  let res = await asyncIyziPayForm(request);
+  let res = await asyncIyzipayForm(request);
   return res;
 };
 
 
-///Check https://dev.iyzipay.com/tr/api/3d-ile-odeme for more info.
+/** 
+ * Make a purchase with 3D Auth API.
+ * For more information: https://dev.iyzipay.com/en/api/auth-with-3d
+ */
 export const iyzipayPayment3D = async ({
   basketItems,
   billingAddress,
@@ -84,7 +96,7 @@ export const iyzipayPayment3D = async ({
 }: Pay3DParams) => {
   let iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
 
-  let asyncIyziPay3D = function (req: IyziPay3D) {
+  let asyncIyzipay3D = function (req: Iyzipay3D) {
     return new Promise((resolve, reject) => {
       iyzipay.threedsInitialize.create(req, function (err, result) {
         if (err) reject(err);
@@ -93,11 +105,11 @@ export const iyzipayPayment3D = async ({
     });
   };
 
-  let request: IyziPay3D = {
+  let request: Iyzipay3D = {
     locale: Iyzipay.LOCALE.TR,
     conversationId: conversationId,
-    price: price.toString(),
-    paidPrice: pricePaid.toString(),
+    price: price,
+    paidPrice: pricePaid,
     currency: Iyzipay.CURRENCY.TRY,
     paymentGroup: Iyzipay.PAYMENT_GROUP.PRODUCT,
     paymentCard: paymentCard,
@@ -107,18 +119,23 @@ export const iyzipayPayment3D = async ({
     billingAddress: billingAddress,
     basketItems: basketItems,
   };
-  let res = await asyncIyziPay3D(request);
+  let res = await asyncIyzipay3D(request);
   return res;
 };
 
-export const confirmIyziPay = async (
+
+/** 
+ * Confirm the purchase made with 3D Auth API.
+ * For more information: https://dev.iyzipay.com/tr/api/3d-ile-odeme
+ */
+export const confirmIyzipayPayment3D = async (
   paymentId: string,
   conversationId: string,
   iyzicoAPIKeyInfo: APIKey
 ) => {
   let iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
 
-  let asyncConfirmIyziPay = function (
+  let asyncConfirmIyzipay = function (
     paymentId: string,
     conversationId: string
   ) {
@@ -136,17 +153,44 @@ export const confirmIyziPay = async (
       );
     });
   };
-  let res = await asyncConfirmIyziPay(paymentId, conversationId);
+  let res = await asyncConfirmIyzipay(paymentId, conversationId);
   return res;
 };
 
-export const confirmSubMerchantIyziPayForm = async (
+
+/** 
+ * Create a Submerchant for your marketplace.
+ * For more information: https://dev.iyzipay.com/en/marketplace/submerchant
+ */
+export const createSubmerchant = async (sub: SubMerchant, iyzicoAPIKeyInfo: APIKey) => {
+  try {
+    let iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
+    let asyncIyzipaySubmerchantCreate = function (sub: SubMerchant) {
+      return new Promise((resolve, reject) => {
+        iyzipay.subMerchant.create(sub, function (err, result) {
+          if (err) reject(err);
+          else resolve(result);
+        });
+      });
+    };
+    let res = await asyncIyzipaySubmerchantCreate(sub);
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+/** 
+ * Confirm the payment made to your Submerchant in your marketplace.
+ * For more information: https://dev.iyzipay.com/en/marketplace/approval
+ */
+export const confirmSubmerchantIyzipay = async (
   paymentTransactionId: string,
   iyzicoAPIKeyInfo: APIKey
 ) => {
   let iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
 
-  let asyncConfirmIyziPaySubMerchant = function (
+  let asyncConfirmIyzipaySubmerchant = function (
     paymentTransactionId: string
   ) {
     return new Promise((resolve, reject) => {
@@ -162,46 +206,18 @@ export const confirmSubMerchantIyziPayForm = async (
       );
     });
   };
-  let res = await asyncConfirmIyziPaySubMerchant(
+  let res = await asyncConfirmIyzipaySubmerchant(
     paymentTransactionId,
   );
   return res;
 };
 
 
-export const confirmSubMerchantIyziPay = async (
-  paymentTransactionId: string,
-  conversationId: string,
-  iyzicoAPIKeyInfo: APIKey
-  ) => {
-  let iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
-
-  let asyncConfirmIyziPaySubMerchant = function (
-    paymentTransactionId: string,
-    conversationId: string
-  ) {
-    return new Promise((resolve, reject) => {
-      iyzipay.approval.create(
-        {
-          locale: Iyzipay.LOCALE.TR,
-          paymentTransactionId: paymentTransactionId,
-          conversationId: conversationId,
-        },
-        function (err, result) {
-          if (err) reject(err);
-          else resolve(result);
-        }
-      );
-    });
-  };
-  let res = await asyncConfirmIyziPaySubMerchant(
-    paymentTransactionId,
-    conversationId
-  );
-  return res;
-};
-
-export const updateSubmerchantIyziPay = async ({
+/** 
+ * Update the information for your Submerchant in your marketplace.
+ * For more information: https://dev.iyzipay.com/en/marketplace/submerchant
+ */
+export const updateSubmerchantIyzipay = async ({
   conversationId,
   subMerchantKey,
   iban,
@@ -266,20 +282,4 @@ export const updateSubmerchantIyziPay = async ({
   return res;
 };
 
-export const createSubmerchant = async (sub: SubMerchant, iyzicoAPIKeyInfo: APIKey) => {
-  try {
-    let iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
-    let asyncIyzipaySubmerchantCreate = function (sub: SubMerchant) {
-      return new Promise((resolve, reject) => {
-        iyzipay.subMerchant.create(sub, function (err, result) {
-          if (err) reject(err);
-          else resolve(result);
-        });
-      });
-    };
-    let res = await asyncIyzipaySubmerchantCreate(sub);
-    return res;
-  } catch (e) {
-    console.log(e);
-  }
-};
+

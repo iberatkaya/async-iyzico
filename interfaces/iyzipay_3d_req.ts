@@ -4,7 +4,7 @@ import { Buyer } from "./buyer";
 import { CreditCard } from "./credit_card";
 import { ShippingAddress } from "./shipping_address";
 
-export interface IyziPay3D {
+export interface Iyzipay3D {
   conversationId: string;
   locale: any;
   price: string;

@@ -1,10 +1,9 @@
-import { BasketItem } from "./iyzico/basket_item";
-import { BillingAddress } from "./iyzico/billing_address";
-import { ShippingAddress } from "./iyzico/shipping_address";
-import { CreditCard } from "./iyzico/credit_card";
-import { Buyer } from "./iyzico/buyer";
+import { BasketItem } from "./basket_item";
+import { BillingAddress } from "./billing_address";
+import { Buyer } from "./buyer";
+import { ShippingAddress } from "./shipping_address";
 
-export interface IyziPayForm {
+export interface IyzipayForm {
   conversationId: string;
   locale: any;
   price: string;
