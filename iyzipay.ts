@@ -25,7 +25,7 @@ export const iyzipayPaymentForm = async ({
 }: PayFormParams) => {
   let iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
 
-  let asyncIyzipayForm = function (req: IyzipayForm) {
+  let asyncIyzipayForm = function (req) {
     return new Promise((resolve, reject) => {
       iyzipay.checkoutFormInitialize.create(req, function (err, result) {
         if (err) reject(err);
@@ -96,7 +96,7 @@ export const iyzipayPayment3D = async ({
 }: Pay3DParams) => {
   let iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
 
-  let asyncIyzipay3D = function (req: Iyzipay3D) {
+  let asyncIyzipay3D = function (req) {
     return new Promise((resolve, reject) => {
       iyzipay.threedsInitialize.create(req, function (err, result) {
         if (err) reject(err);
