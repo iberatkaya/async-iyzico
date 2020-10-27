@@ -1,4 +1,4 @@
-# Iyzico Node Types
+# Iyzico TypeScript Types
 
 [Iyzico](https://iyzico.com) is a useful service to make payments, but its Node.js implementation does not include TypeScript types and Promises. This causes the [Callback Hell](http://callbackhell.com/) problem in JavaScript. While I was using Iyzico in a Node.js server written with TypeScript, I added TypeScript types and promisified Iyzico's callback functions. I hope it helps!
 
