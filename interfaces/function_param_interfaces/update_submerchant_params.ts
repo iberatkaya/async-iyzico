@@ -11,5 +11,4 @@ export interface UpdateSubmerchantParams {
     gsmNumber: string,
     name: string,
     identityNumber: string,
-    iyzicoAPIKeyInfo: APIKey
 }

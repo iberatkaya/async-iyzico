@@ -1,4 +1,4 @@
-export interface SubMerchant {
+export interface Submerchant {
   locale: any;
   subMerchantExternalId: string;
   subMerchantType: any;

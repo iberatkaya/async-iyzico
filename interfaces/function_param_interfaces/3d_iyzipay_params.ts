@@ -15,5 +15,4 @@ export interface Pay3DParams {
   shippingAddress: ShippingAddress;
   billingAddress: BillingAddress;
   basketItems: BasketItem[];
-  iyzicoAPIKeyInfo: APIKey;
 }

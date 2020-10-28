@@ -14,5 +14,4 @@ export interface PayFormParams {
   shippingAddress: ShippingAddress;
   billingAddress: BillingAddress;
   basketItems: BasketItem[];
-  iyzicoAPIKeyInfo: APIKey;
 }
