@@ -11,6 +11,8 @@ git clone https://github.com/iberatkaya/async-iyzico
 ```
 
 ```javascript
+import { AsyncIyzico } from "./iyzipay.ts";
+
 //Create the AsyncIyzico instance with the API information.
 let asyncIyizco = new AsyncIyzico(iyzicoAPIKeyInfo);
 //Make a payment with a Payment Form.
