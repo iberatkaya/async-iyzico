@@ -1,4 +1,3 @@
-import Iyzipay from "iyzipay";
 import { Iyzipay3D } from "./interfaces/iyzipay_3d_req";
 import { IyzipayForm } from "./interfaces/iyzipay_form_req";
 import { Pay3DParams } from "./interfaces/function_param_interfaces/3d_iyzipay_params";
@@ -6,6 +5,7 @@ import { Submerchant } from "./interfaces/submerchant";
 import { PayFormParams } from "./interfaces/function_param_interfaces/form_iyzipay_params";
 import { APIKey } from "./interfaces/api_key";
 import { UpdateSubmerchantParams } from "./interfaces/function_param_interfaces/update_submerchant_params";
+const Iyzipay = require("iyzipay");
 
 /**
  * AsyncIyzico is a wrapper around Iyzico that adds TypeScript types
@@ -19,7 +19,7 @@ import { UpdateSubmerchantParams } from "./interfaces/function_param_interfaces/
  */
 
 export class AsyncIyzico {
-  _iyzipay: Iyzipay;
+  _iyzipay: typeof Iyzipay;
 
   constructor(iyzicoAPIKeyInfo: APIKey){
     this._iyzipay = new Iyzipay(iyzicoAPIKeyInfo);
@@ -36,9 +36,9 @@ export class AsyncIyzico {
  */
   async iyzipayPaymentForm (payFormParams: PayFormParams): Promise<Object> {
 
-    let asyncIyzipayForm = function (req) {
+    let asyncIyzipayForm = function (req: any, _iyzipay: typeof Iyzipay) {
       return new Promise((resolve, reject) => {
-        this._iyzipay.checkoutFormInitialize.create(req, function (err, result) {
+        _iyzipay.checkoutFormInitialize.create(req, function (err: any, result: any) {
           if (err) reject(err);
           else resolve(result);
         });
@@ -71,7 +71,7 @@ export class AsyncIyzico {
       billingAddress: billingAddress,
       basketItems: basketItems,
     };
-    let res = await asyncIyzipayForm(request);
+    let res = await asyncIyzipayForm(request, this._iyzipay) as Object;
     return res;
   };
 
@@ -87,9 +87,9 @@ export class AsyncIyzico {
   async retrieveIyzipayForm (token: string): Promise<Object> {
     
 
-    let asyncIyzipayForm = function (req) {
+    let asyncIyzipayForm = function (req: any, _iyzipay: typeof Iyzipay) {
       return new Promise((resolve, reject) => {
-        this._iyzipay.checkoutForm.retrieve(req, function (err, result) {
+        _iyzipay.checkoutForm.retrieve(req, function (err: any, result: any) {
           if (err) reject(err);
           else resolve(result);
         });
@@ -100,7 +100,7 @@ export class AsyncIyzico {
       locale: Iyzipay.LOCALE.TR,
       token: token,
     };
-    let res = await asyncIyzipayForm(request);
+    let res = await asyncIyzipayForm(request, this._iyzipay) as Object;
     return res;
   };
 
@@ -116,9 +116,9 @@ export class AsyncIyzico {
   async iyzipayPayment3D (pay3DParams: Pay3DParams): Promise<Object> {
     
 
-    let asyncIyzipay3D = function (req) {
+    let asyncIyzipay3D = function (req: any, _iyzipay: typeof Iyzipay) {
       return new Promise((resolve, reject) => {
-        this._iyzipay.threedsInitialize.create(req, function (err, result) {
+        _iyzipay.threedsInitialize.create(req, function (err: any, result: any) {
           if (err) reject(err);
           else resolve(result);
         });
@@ -151,7 +151,7 @@ export class AsyncIyzico {
       billingAddress: billingAddress,
       basketItems: basketItems,
     };
-    let res = await asyncIyzipay3D(request);
+    let res = await asyncIyzipay3D(request, this._iyzipay) as Object;
     return res;
   };
 
@@ -171,10 +171,11 @@ export class AsyncIyzico {
 
     let asyncConfirmIyzipay = function (
       paymentId: string,
+      _iyzipay: typeof Iyzipay,
       conversationId?: string
     ) {
       return new Promise((resolve, reject) => {
-        this._iyzipay.threedsPayment.create(
+        _iyzipay.threedsPayment.create(
           (conversationId !== undefined) ?
             {
               locale: Iyzipay.LOCALE.TR,
@@ -186,14 +187,14 @@ export class AsyncIyzico {
               locale: Iyzipay.LOCALE.TR,
               paymentId: paymentId,
             },
-          function (err, result) {
+          function (err: any, result: any) {
             if (err) reject(err);
             else resolve(result);
           }
         );
       });
     };
-    let res = await asyncConfirmIyzipay(paymentId, conversationId);
+    let res = await asyncConfirmIyzipay(paymentId, this._iyzipay, conversationId) as Object;
     return res;
   };
 
@@ -206,21 +207,16 @@ export class AsyncIyzico {
    * @returns Checkout https://dev.iyzipay.com/en/marketplace/submerchant for its return value.
    */
   async createSubmerchant (submerchant: Submerchant): Promise<Object>  {
-    try {
-      
-      let asyncIyzipaySubmerchantCreate = function (submerchant) {
-        return new Promise((resolve, reject) => {
-          this._iyzipay.subMerchant.create(submerchant, function (err, result) {
-            if (err) reject(err);
-            else resolve(result);
-          });
+    let asyncIyzipaySubmerchantCreate = function (submerchant: Submerchant, _iyzipay: typeof Iyzipay) {
+      return new Promise((resolve, reject) => {
+        _iyzipay.subMerchant.create(submerchant, function (err: any, result: any) {
+          if (err) reject(err);
+          else resolve(result);
         });
-      };
-      let res = await asyncIyzipaySubmerchantCreate(submerchant);
-      return res;
-    } catch (e) {
-      console.log(e);
-    }
+      });
+    };
+    let res = await asyncIyzipaySubmerchantCreate(submerchant, this._iyzipay) as Object;
+    return res;
   };
 
   /** 
@@ -236,15 +232,15 @@ export class AsyncIyzico {
     
 
     let asyncConfirmIyzipaySubmerchant = function (
-      paymentTransactionId: string
+      paymentTransactionId: string, _iyzipay: typeof Iyzipay
     ) {
       return new Promise((resolve, reject) => {
-        this._iyzipay.approval.create(
+        _iyzipay.approval.create(
           {
             locale: Iyzipay.LOCALE.TR,
             paymentTransactionId: paymentTransactionId,
           },
-          function (err, result) {
+          function (err: any, result: any) {
             if (err) reject(err);
             else resolve(result);
           }
@@ -252,8 +248,8 @@ export class AsyncIyzico {
       });
     };
     let res = await asyncConfirmIyzipaySubmerchant(
-      paymentTransactionId,
-    );
+      paymentTransactionId, this._iyzipay
+    ) as Object;
     return res;
   };
 
@@ -279,10 +275,10 @@ export class AsyncIyzico {
       email: string,
       gsmNumber: string,
       name: string,
-      identityNumber: string
+      identityNumber: string, _iyzipay: typeof Iyzipay
     ) {
       return new Promise((resolve, reject) => {
-        this._iyzipay.subMerchant.update(
+        _iyzipay.subMerchant.update(
           {
             locale: Iyzipay.LOCALE.TR,
             conversationId,
@@ -297,7 +293,7 @@ export class AsyncIyzico {
             identityNumber,
             currency: Iyzipay.CURRENCY.TRY,
           },
-          function (err, result) {
+          function (err: any, result: any) {
             if (err) reject(err);
             else resolve(result);
           }
@@ -328,8 +324,9 @@ export class AsyncIyzico {
       email,
       gsmNumber,
       name,
-      identityNumber
-    );
+      identityNumber,
+      this._iyzipay
+    ) as Object;
     return res;
   };
 }

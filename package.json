@@ -1,0 +1,25 @@
+{
+  "name": "iyzico-types",
+  "version": "1.0.0",
+  "description": "[Iyzico](https://iyzico.com) is a useful service to make payments, but its Node.js implementation does not include TypeScript types and Promises. This causes the [Callback Hell](http://callbackhell.com/) problem in JavaScript. While I was using Iyzico in a Node.js server written with TypeScript, I added TypeScript types and promisified Iyzico's callback functions. I hope it helps!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iberatkaya/iyzico-node-types.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iberatkaya/iyzico-node-types/issues"
+  },
+  "homepage": "https://github.com/iberatkaya/iyzico-node-types#readme",
+  "dependencies": {
+    "@types/node": "^14.14.6",
+    "iyzipay": "^2.0.48",
+    "typescript": "^4.0.5"
+  }
+}
