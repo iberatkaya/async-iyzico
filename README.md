@@ -7,7 +7,7 @@
 Clone it and add it to your project and import `AsyncIyzico`.
 
 ```console
-git clone https://github.com/iberatkaya/async-iyzico
+git clone https://github.com/iberatkaya/async-iyzico.git
 ```
 
 ```javascript
